@@ -20,12 +20,14 @@ import javax.microedition.io.*; // Biblioteca para tratar entrada e saída de dad
  * com conexão bluetooth.
  * 
  * */
-public class ArdBluePass extends MIDlet implements CommandListener, DiscoveryListener {
+public class ArdBluePass extends MIDlet implements CommandListener, DiscoveryListener, ItemCommandListener {
 
     private Display display;
-    private Command ok, comecar,sair;
+    private Command ok, sobre, ajuda,sair;
+    private StringItem btnOk;
     private Form inicial;
     private List comandos;
+    private TextField txtSenha;
     
     private StreamConnection con;
     private OutputStream outs;
@@ -41,38 +43,52 @@ public class ArdBluePass extends MIDlet implements CommandListener, DiscoveryLis
 
 
     public void startApp() {
-       
-        ok = new Command("OK", Command.OK, 1);
-        comecar = new Command("Começar", Command.OK, 1);
-        sair = new Command("Sair", Command.EXIT, 1);
-
-        inicial = new Form("ArdBluePass");
-        comandos = new List("Escolha uma ação", List.EXCLUSIVE);
-
-        inicial.addCommand(comecar);
-        inicial.setCommandListener(this);
-
-        comandos.addCommand(ok);
-        comandos.addCommand(sair);
-        
-        
-        
-        comandos.append("Acender LED", null);
-        comandos.append("Apagar LED", null);
-        comandos.setCommandListener(this);
-
-        display.setCurrent(inicial);
+    	comecar();
+    	iniciarTela();
     }
 
 
-    public void commandAction(Command c, Displayable d) {
-        if (c == comecar){
-            comecar();
-        }  else if(c == sair){
+    private void iniciarTela() {
+    	  ok = new Command("Enviar", Command.SCREEN, 1);
+    	  
+    	  sobre = new Command("Sobre", Command.SCREEN, 1);
+    	  ajuda = new Command("Ajuda", Command.SCREEN, 1);
+    	  
+          sair = new Command("Sair", Command.EXIT, 1);
+
+          inicial = new Form("J2Bluino");
+          
+          txtSenha = new TextField("SENHA", null, 5, TextField.PASSWORD);
+          inicial.append(txtSenha);
+          
+          btnOk = new StringItem("", "Enviar",StringItem.BUTTON);
+          btnOk.setDefaultCommand(ok);
+          btnOk.setItemCommandListener(this);
+          btnOk.addCommand(ok);
+ 
+          inicial.append(btnOk);
+          inicial.addCommand(sair);
+          
+          inicial.addCommand(sobre);
+          inicial.addCommand(ajuda);
+          
+          inicial.setCommandListener(this);
+
+          display.setCurrent(inicial);
+		
+	}
+
+
+	public void commandAction(Command c, Displayable d) {
+		if(c == sair){
               destroyApp(false);
               notifyDestroyed();
-        } else if (c == ok){
-            enviar();
+        }else if (c == ajuda){
+            Ajuda telaAjuda = new Ajuda(display, inicial);
+            telaAjuda.show();
+        }else if (c == sobre){
+        	Sobre telaSobre = new Sobre(display, inicial);
+            telaSobre.show();
         }
 
     }
@@ -178,6 +194,16 @@ public class ArdBluePass extends MIDlet implements CommandListener, DiscoveryLis
    public void inquiryCompleted(int discType) {}
    public void servicesDiscovered(int transID, ServiceRecord[] servRecord) {}
    public void serviceSearchCompleted(int transID, int respCode) {}
+
+
+public void commandAction(Command arg0, Item arg1) {
+	// TODO Auto-generated method stub
+	
+	if (arg0 == ok){
+		enviar();
+	}
+	
+}
 
 
 }

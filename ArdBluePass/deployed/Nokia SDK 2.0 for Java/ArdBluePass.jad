@@ -1,5 +1,5 @@
-MIDlet-1: ArdBluePass,,ContrlLED
-MIDlet-Jar-Size: 3814
+MIDlet-1: ArdBluePass,,ArdBluePass
+MIDlet-Jar-Size: 3842
 MIDlet-Jar-URL: ArdBluePass.jar
 MIDlet-Name: ArdBluePass
 MIDlet-Vendor: Desenvolvedor
